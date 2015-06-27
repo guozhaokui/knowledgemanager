@@ -4,90 +4,56 @@ var fs = require('fs');
 var buf = fs.readFileSync('sdyxz.txt','utf8');
 
 function clusterdt(){
+	this.dtnum=0;
 	this.smpdt={};
 	this.adddt=function(v){
 		if(this.smpdt[v]===undefined){
 			this.smpdt[v]=1;
+			this.dtnum++;
 		}else{
 			this.smpdt[v]++;
 		}
 	}
 	this.clear=function(){
 		this.smpdt={};
+		this.dtnum=0;
 	}
 	this.sort=function(){
-		var sorted = [];
+		var sorted = new Array(this.dtnum);
+		var i=0;
 		for(var k in this.smpdt){
-			sorted.push({k:k,v:this.smpdt[k]});
+			sorted[i++]={k:k,v:this.smpdt[k]};
 		}
-		sorted.sort(function(a,b){return a.v>b.v?-1:1;});
-		return sorted;
+		sorted.sort(function(a,b){return b.v-a.v;});
+		//去掉少的
+		var cutnum=3;
+		var n=0;
+		for(; n<sorted.length; n++){
+			if(sorted[n].v<cutnum)
+				break;
+		}
+		return sorted.slice(0,n);
 	}
 	this.save=function(f){
 		var sted = this.sort();
-		var outbuf=[];
-		sted.forEach(function(v){outbuf.push(v.k+' '+v.v);});
+		var outbuf= new Array(sted.length);
+		var i=0;
+		sted.forEach(function(v){outbuf[i++]=(v.k+' '+v.v);});
 		fs.writeFileSync(f,outbuf.join('\r\n'));	
 	}
 }
 
-var words=new clusterdt();
-var len = buf.length;
-/*
-for(var i=0; i<len; i++){
-	words.adddt(buf[i]);
+function statword(buf,wlen,f){
+	var words=new clusterdt();
+	var len = buf.length;
+	for(var i=0; i<len-2; i++){
+		var w = buf.slice(i,i+wlen);
+		i%1000==0?log(i/len):"";
+		words.adddt(w);
+	}
+	words.save(f);
 }
-log('len='+len);
 
-//统计单个字的频率
-words.save('word.txt');
-*/
+statword(buf,1,'word1.txt');
 
-/*
-//统计两个字的关联度
-//\r\n 去掉么
-//所有的两个字的个数
-var w2len = len-1;
-words.clear();
-for(var i=0; i<len-1; i++){
-	var w2 = buf[i]+buf[i+1];
-	words.adddt(w2);
-}
-words.save('word2.txt');
-*/
 
-//三个字
-words.clear();
-for(var i=0; i<len-2; i++){
-	var w = buf.slice(i,i+3);
-	log(i/len);
-	words.adddt(w);
-}
-words.save('word3.txt');
-
-//4个字
-words.clear();
-for(var i=0; i<len-3; i++){
-	var w = buf.slice(i,i+4);
-	log(i/len);
-	words.adddt(w);
-}
-words.save('word4.txt');
-
-//5个字
-words.clear();
-for(var i=0; i<len-4; i++){
-	var w = buf.slice(i,i+5);
-	log(i/len);
-	words.adddt(w);
-}
-words.save('word5.txt');
-
-//6个字
-words.clear();
-for(var i=0; i<len-5; i++){
-	var w = buf.slice(i,i+6);
-	log(i/len);
-	words.adddt(w);
-}
-words.save('word6.txt');
