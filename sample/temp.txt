@@ -1,0 +1,14 @@
+
+cocos 开发环境 搭建 http://cn.cocos2d-x.org/tutorial/show?id=1367 段涛
+
+redirectUri
+
+68玩
+
+adb push E:\Conch\Conch_debug\BrowserPlugin\bin\68wan\laya_v122\liblaya.so /data/data/net.hotpk.h5box/files/plugins/laya/
+
+编码规范
+	规范crlf
+	修改git的设置
+	autocrlf=false
+	git config --global core.autocrlf false
