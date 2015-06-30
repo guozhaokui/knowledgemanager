@@ -83,11 +83,33 @@ word2.forEach(function(w){
 function getPW2(w1,w2){
 	var w=w1+w2;
 	var wn = word2[w];
-	log('wn='+wn+','+word1[w1]);
 	if(!wn) return 0;
 	return wn/word1[w1];
 }
+
 //计算是句子的概率
-log(getPW2('黄','蓉' ));
-log(getPW2('欧','阳' ));
+function getPS(s){
+	var pw=word1[s[0]]/buf.length;
+	var len = s.length;
+	for(var i=1; i<len; i++){
+		pw*=getPW2(s[i-1],s[i]);
+	}
+	return pw;
+}
+
+//随机输出
+function sayrandom(){
+}
+
+function test1(){
+	log(getPW2('黄','蓉' ));
+	log(getPW2('欧','阳' ));
+	log(getPW2('武','功' ));
+}
+
+function test2(){
+	log(getPS(''));
+}
+
+test2();
 //w1 w2的概率
