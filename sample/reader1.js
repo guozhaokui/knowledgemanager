@@ -1,7 +1,7 @@
 ﻿var log = console.log;
 var fs = require('fs');
 
-var buf = fs.readFileSync('sdyxz.txt','utf8');
+var buf = fs.readFileSync(__dirname+'/sdyxz.txt','utf8');
 
 //预处理一下，修改所有的符合为空格
 buf = buf.replace(/\r\n/g,' ');
@@ -111,5 +111,6 @@ function test2(){
 	log(getPS(''));
 }
 
-test2();
+//test2();
+exports.check=getPS;
 //w1 w2的概率
