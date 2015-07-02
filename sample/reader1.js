@@ -89,7 +89,7 @@ function getPW2(w1,w2){
 
 //计算是句子的概率
 function getPS(s){
-	var pw=word1[s[0]]/buf.length;
+	var pw=1;//word1[s[0]]/buf.length;		先不考虑第一个出现的概率
 	var len = s.length;
 	for(var i=1; i<len; i++){
 		pw*=getPW2(s[i-1],s[i]);
@@ -108,9 +108,39 @@ function test1(){
 }
 
 function test2(){
-	log(getPS(''));
+	//统计独立词
+	var l = buf.length;
+	var w = '';
+	var lastw='';
+	var lastp=0;
+	var words={};
+	for(var i=0; i<l; i++){
+		w+=buf[i];
+		var p = getPS(w);
+		//log(w+'='+p);
+		var lmt=0.7;
+		if(p<lmt){
+			w=buf[i];
+			if(lastp>lmt){
+				words[lastw]=lastp;
+			}
+		}else{
+			lastw=w;
+		}
+		lastp=p;
+	}
+	var vw = [];
+	for(var k in words){
+		var cnt = word1[k[0]];
+		if(cnt>15)	//第一个字超过多次以上
+			vw.push([k,words[k],cnt]);
+	}
+	vw.sort(function(a,b){return b[1]-a[1];});
+	log(vw);
 }
 
-//test2();
+debugger;
+//log(getPS('编辑'));
+test2();
 exports.check=getPS;
 //w1 w2的概率

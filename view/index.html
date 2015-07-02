@@ -5,28 +5,35 @@
   </head>
   <body>
     <div style="width:100%;height:100%"></div>
-    <h1>Hello World!</h1>
     We are using io.js <script>document.write(process.version)</script>
     and Electron <script>document.write(process.versions['electron'])</script>.
     curexepath=<script>document.write(window.xxo)</script>.
 	<canvas id="myCanvas" width="400" height="200" style="border:1px solid #d3d3d3;">Your browser does not support the HTML5 canvas tag.</canvas>
 	<script>
 		var sentchk = require('../sample/reader1.js').check;
-		console.log('chk(一棵大树)='+sentchk('一棵大树'));
+		var fs = require('fs');
+		var path = require('path');
+		var b1 = fs.readFileSync(path.resolve(path.dirname(__filename),'../sample/word5.txt'),'utf8');
+		var ba = b1.split('\n');
+		var bk = new Array(ba.length);
+		var ii=0;
+		ba.forEach(function(w){
+			w=w.substr(0,5);
+			bk[ii++]=[w,sentchk(w)];
+		});
+		bk.sort(function(a,b){return b[1]-a[1];});
+		bk.forEach(function(v){
+		console.log(v[0]+','+v[1]);
+		});
 		var c=document.getElementById("myCanvas");
 		var ctx=c.getContext("2d");
 
 		ctx.fillStyle="black";
 		ctx.strokeStyle="black";
 
-		ctx.strokeRect(231,180,337,168);
-		ctx.strokeRect(344,196,18,40);ctx.strokeRect(382,196,18,40);
-		ctx.strokeRect(402,196,18,40);
-
+		ctx.strokeRect(0,0,100,100);
 		ctx.strokeStyle="green";
-		ctx.strokeRect(0,0,800,480);
-		ctx.strokeRect(0,0,250,125);
-		ctx.strokeRect(344,185,18,40);
+		//ctx.strokeRect(0,0,800,480);
 
 		var req1,req2;
 		function step(tm){
