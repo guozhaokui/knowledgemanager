@@ -9,10 +9,12 @@
     and Electron <script>document.write(process.versions['electron'])</script>.
     curexepath=<script>document.write(window.xxo)</script>.
 	<canvas id="myCanvas" width="400" height="200" style="border:1px solid #d3d3d3;">Your browser does not support the HTML5 canvas tag.</canvas>
+	<input>aaa</input>
 	<script>
-		var sentchk = require('../sample/reader1.js').check;
 		var fs = require('fs');
 		var path = require('path');
+		/*
+		var sentchk = require('../sample/reader1.js').check;
 		var b1 = fs.readFileSync(path.resolve(path.dirname(__filename),'../sample/word5.txt'),'utf8');
 		var ba = b1.split('\n');
 		var bk = new Array(ba.length);
@@ -25,6 +27,7 @@
 		bk.forEach(function(v){
 		console.log(v[0]+','+v[1]);
 		});
+		*/
 		var c=document.getElementById("myCanvas");
 		var ctx=c.getContext("2d");
 
