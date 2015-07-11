@@ -1,4 +1,4 @@
-﻿
+﻿var fs = require('fs');
 var log = console.log;
 
 function clusterdt(){

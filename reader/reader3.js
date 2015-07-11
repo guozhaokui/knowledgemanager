@@ -1,57 +1,15 @@
 ﻿var log = console.log;
 var fs = require('fs');
 var handler = require('./handler.js');
+var dthandler = require('./datahandler.js');
 
-var buf = fs.readFileSync(__dirname+'/../sample/4/玄天邪尊.txt','utf8');
+var buf = fs.readFileSync(__dirname+'/rand10.txt','utf8');
 
 buf = handler.prehandletxt(buf);
 
-//统计个数
-function clusterdt(){
-	this.dtnum=0;
-	this.smpdt={};
-	this.adddt=function(v){
-		if(this.smpdt[v]===undefined){
-			this.smpdt[v]=1;
-			this.dtnum++;
-		}else{
-			this.smpdt[v]++;
-		}
-	}
-	this.clear=function(){
-		this.smpdt={};
-		this.dtnum=0;
-	}
-	//排序，去掉少的
-	this.sort=function(cutnum){
-		var sorted = new Array(this.dtnum);
-		var i=0;
-		for(var k in this.smpdt){
-			sorted[i++]=[k,this.smpdt[k]];
-		}
-		sorted.sort(function(a,b){return b[1]-a[1];});
-		//去掉少的
-		if(cutnum>0){
-			var n=0;
-			for(; n<sorted.length; n++){
-				if(sorted[n][1]<cutnum)
-					break;
-			}
-			return sorted.slice(0,n);
-		}
-		return sorted;
-	}
-	this.save=function(f){
-		var sted = this.sort(3);
-		var outbuf= new Array(sted.length);
-		var i=0;
-		sted.forEach(function(v){outbuf[i++]=(v[0]+' '+v[1]);});
-		fs.writeFileSync(f,outbuf.join('\r\n'));	
-	}
-}
 
 function statword(buf,wlen,cutnum){
-	var words=new clusterdt();
+	var words=new dthandler.clusterdt();
 	var len = buf.length;
 	for(var i=0; i<len-wlen; i++){
 		var w = buf.slice(i,i+wlen);

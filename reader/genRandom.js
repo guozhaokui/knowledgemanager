@@ -4,58 +4,15 @@
 */
 var log = console.log;
 var fs = require('fs');
+var handler = require('./handler.js');
+var dthandler = require('./datahandler.js');
 
-var buf = fs.readFileSync('4/玄天邪尊.txt','utf8');
+var buf = fs.readFileSync('../sample/2/zhenhuan.txt','utf8');
+buf = handler.prehandletxt(buf);
 
-//预处理一下，修改所有的符合为空格
-buf = buf.replace(/\r\n/g,' ');
-var biaodian = '，。：！“”‘’…、？（）《》　/';
-var ebiaodian = escape(biaodian).replace(/%/g,'\\');
-var regbiao = new RegExp('[+'+ebiaodian+']','g');
-buf = buf.replace(regbiao,' ');
-
-function clusterdt(){
-	this.dtnum=0;
-	this.smpdt={};
-	this.adddt=function(v){
-		if(this.smpdt[v]===undefined){
-			this.smpdt[v]=1;
-			this.dtnum++;
-		}else{
-			this.smpdt[v]++;
-		}
-	}
-	this.clear=function(){
-		this.smpdt={};
-		this.dtnum=0;
-	}
-	this.sort=function(){
-		var sorted = new Array(this.dtnum);
-		var i=0;
-		for(var k in this.smpdt){
-			sorted[i++]={k:k,v:this.smpdt[k]};
-		}
-		sorted.sort(function(a,b){return b.v-a.v;});
-		//去掉少的
-		var cutnum=3;
-		var n=0;
-		for(; n<sorted.length; n++){
-			if(sorted[n].v<cutnum)
-				break;
-		}
-		return sorted.slice(0,n);
-	}
-	this.save=function(f){
-		var sted = this.sort();
-		var outbuf= new Array(sted.length);
-		var i=0;
-		sted.forEach(function(v){outbuf[i++]=(v.k+' '+v.v);});
-		fs.writeFileSync(f,outbuf.join('\r\n'));	
-	}
-}
-
-function statword(buf,wlen,f){
-	var words=new clusterdt();
+//num是重复几次
+function genrandom(buf,wlen,num,f){
+	var words=new dthandler.clusterdt();
 	var len = buf.length;
 	for(var i=0; i<len-wlen; i++){
 		var w = buf.slice(i,i+wlen);
@@ -63,14 +20,15 @@ function statword(buf,wlen,f){
 		if(w.indexOf(' ')<0)
 			words.adddt(w);
 	}
-	words.save(f);
+	var w1=[];
+	for( v in words.smpdt ){
+		w1.push(v);	
+	}
+	var outbuf='';
+	for(var n=0,sz=num*w1.length; n<sz; n++){
+		outbuf+=w1[parseInt(Math.random()*w1.length)];
+	}
+	fs.writeFileSync(f,outbuf,'utf8');
 }
 
-statword(buf,1,'word1.txt');
-statword(buf,2,'word2.txt');
-statword(buf,3,'word3.txt');
-statword(buf,4,'word4.txt');
-statword(buf,5,'word5.txt');
-statword(buf,6,'word6.txt');
-statword(buf,7,'word7.txt');
-
+genrandom(buf,1,10,__dirname+'/rand10.txt');
