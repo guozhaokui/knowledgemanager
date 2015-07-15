@@ -3,7 +3,7 @@ var fs = require('fs');
 var handler = require('./handler.js');
 var dthandler = require('./datahandler.js');
 
-var buf = fs.readFileSync(__dirname+'/rand10.txt','utf8');
+var buf = fs.readFileSync(__dirname+'/../sample/6/jueduijinshu.txt','utf8');
 
 buf = handler.prehandletxt(buf);
 
@@ -39,7 +39,7 @@ function getPW2(w1,w2){
 	return wn/word1[w1];
 }
 
-//计算是句子的概率
+//计算当s的第一个字出现的时候，出现s的概率
 function getPS(s){
 	var pw=1;//word1[s[0]]/buf.length;		先不考虑第一个出现的概率
 	var len = s.length;
@@ -49,14 +49,19 @@ function getPS(s){
 	return pw;
 }
 
-//随机输出
-function sayrandom(){
+//计算是句子的概率
+function getPS1(s){
+	var pw=word1[s[0]]/buf.length;
+	var len = s.length;
+	for(var i=1; i<len; i++){
+		pw*=getPW2(s[i-1],s[i]);
+	}
+	return pw;
+	
 }
 
-function test1(){
-	log(getPW2('黄','蓉' ));
-	log(getPW2('欧','阳' ));
-	log(getPW2('武','功' ));
+//随机输出
+function sayrandom(){
 }
 
 function test2(){
