@@ -16,7 +16,7 @@ function clusterdt(){
 		this.smpdt={};
 		this.dtnum=0;
 	}
-	this.sort=function(){
+	this.sort=function(cut){
 		var sorted = new Array(this.dtnum);
 		var i=0;
 		for(var k in this.smpdt){
@@ -24,7 +24,7 @@ function clusterdt(){
 		}
 		sorted.sort(function(a,b){return b.v-a.v;});
 		//去掉少的
-		var cutnum=3;
+		var cutnum=(cut==undefined || cut==null)?3:cut;
 		var n=0;
 		for(; n<sorted.length; n++){
 			if(sorted[n].v<cutnum)

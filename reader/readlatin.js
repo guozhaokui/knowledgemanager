@@ -1,36 +1,34 @@
 ﻿var log = console.log;
 var fs = require('fs');
-var handler = require('./handler.js');
 var dthandler = require('./datahandler.js');
 
-var buf = fs.readFileSync(__dirname+'/../sample/5/honglou.txt','utf8');
+//var buf = fs.readFileSync(__dirname+'/../sample/en/ANDERSEN/05.txt','utf8');
+var buf = fs.readFileSync(__dirname+'/../sample/de/fengzhiying.txt','utf8');
 
-buf = handler.prehandletxt(buf);
-
-
-function statword(buf,wlen,cutnum){
+function statwordlatin(buf){
 	var words=new dthandler.clusterdt();
-	var len = buf.length;
-	for(var i=0; i<len-wlen; i++){
-		var w = buf.slice(i,i+wlen);
-		//i%1000==0?log(i/len):"";
-		words.adddt(w);
-	}
-	return words.smpdt;//words.sort(cutnum==null?3:cutnum);
+	buf=buf.replace(/\r\n/g,' ');
+	buf=buf.replace(/\r/g,' ');
+	buf=buf.replace(/[ \t\.,\'\":\!;\?\-]+/g,' ');
+	allwords = buf.split(' ');
+	allwords.forEach(function(w){
+		words.adddt(w.toLowerCase());
+	})
+	return words.sort(0);//words.sort(cutnum==null?3:cutnum);
 }
-//单个字的概率
-var word1 = statword(buf,1);
-/*
-word1.forEach(function(w){
-	w[1]/=buf.length;
+
+var words = statwordlatin(buf);
+var b1='';
+words.forEach(function(w){
+	b1+=JSON.stringify(w);
+	b1+='\r\n';
 });
-*/
-//两个字的概率P(w1w2)
-var word2 = statword(buf,2);
-/*
-word2.forEach(function(w){
-})
-*/
+fs.writeFileSync('d:/temp/xk.txt',b1,'utf8');
+log(words);
+
+
+
+
 //计算在w1后面跟着w2的概率
 function getPW2(w1,w2){
 	var w=w1+w2;
@@ -98,6 +96,6 @@ function test2(){
 
 debugger;
 //log(getPS('编辑'));
-test2();
+
 exports.check=getPS;
 //w1 w2的概率

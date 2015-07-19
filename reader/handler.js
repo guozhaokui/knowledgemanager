@@ -13,5 +13,4 @@ function prehandletxt(buf){
 	buf = buf.replace(/[ ]*/g,'');
 	return buf;
 }
-
 exports.prehandletxt=prehandletxt;
