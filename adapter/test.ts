@@ -1,24 +1,31 @@
 //
-function read(prompt, callback:(string)=>void) {
+function say(str:string){
+    process.stdout.write(str);
+}
+
+process.stdin.setEncoding('utf-8');
+
+function read(prompt:string, onSentense:(string)=>void) {
     var str='';
-    process.stdout.write(prompt + ':');
+    say(prompt + ':');
     process.stdin.resume();
-    process.stdin.setEncoding('utf-8');
-    process.stdin.on('data', function(chunk) {
+    process.stdin.once('data', function(chunk) {
         process.stdin.pause();
         str+=chunk;
         var p = str.indexOf('\n');
         if(p>=0){
             var line = str.substr(0,p);
             str =str.substr(p);
-            callback(line);
+            onSentense(line);
         }
     });
 }
 
 function readloop(){
-    read("Bot1",(data)=>{
-        console.log('get '+data);
+    read("Bot",(data)=>{
+        if(data.indexOf('eee')>=0){
+        }
+        say('get '+data+'\n');
         readloop();
     })
 }
